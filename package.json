@@ -1,0 +1,31 @@
+{
+  "name": "binance-bot",
+  "version": "1.0.0",
+  "description": "Binance bot with Javascript",
+  "main": "index.js",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "start": "node dist/app.js resumen",
+    "bot:run": "npm run build && npm start",
+    "bot:test-sell": "npm run build && node dist/runs/test-sell.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "binance-api-node": "^0.12.7",
+    "comma-number": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "node-binance-api": "^0.13.1",
+    "node-storage": "^0.0.9",
+    "node-store": "^0.0.1",
+    "uuid": "^9.0.1",
+    "web3": "^4.7.0"
+  }
+}
