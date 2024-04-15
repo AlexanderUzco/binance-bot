@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-// Set Markets
+// Binance Configs
 const MARKET1 = process.env.MARKET1 as any;
 const MARKET2 = process.env.MARKET2 as any;
 const MARKET = `${MARKET1}${MARKET2}`;
@@ -19,6 +19,10 @@ const SELL_ALL_ON_START =
 const MIN_PRICE_TRANSACTION = process.env
   .MIN_PRICE_TRANSACTION as unknown as number;
 
+// Telegram Configs
+const TELEGRAM_BOT_TOKEN: string | undefined = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID: string | undefined = process.env.TELEGRAM_CHAT_ID;
+
 export {
   MARKET1,
   MARKET2,
@@ -29,4 +33,6 @@ export {
   SLEEP_TIME,
   SELL_ALL_ON_START,
   MIN_PRICE_TRANSACTION,
+  TELEGRAM_BOT_TOKEN,
+  TELEGRAM_CHAT_ID,
 };

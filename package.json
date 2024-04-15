@@ -6,13 +6,14 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/node": "^20.12.7",
+    "@types/node-telegram-bot-api": "^0.64.6",
     "typescript": "^5.4.5"
   },
   "scripts": {
     "build": "tsc --outDir dist",
     "start": "node dist/app.js resumen",
     "bot:run": "npm run build && npm start",
-    "bot:run-test-sell": "npm run build && node dist/runs/runTestSell.js"
+    "bot:run-test-sell": "npm run build && node dist/modules/runs/runTestSell.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +26,7 @@
     "node-binance-api": "^0.13.1",
     "node-storage": "^0.0.9",
     "node-store": "^0.0.1",
+    "node-telegram-bot-api": "^0.65.1",
     "uuid": "^9.0.1",
     "web3": "^4.7.0"
   }

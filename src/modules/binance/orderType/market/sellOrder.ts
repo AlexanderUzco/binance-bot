@@ -21,6 +21,7 @@ import {
 import { colors, log, logColor } from "../../../../utils/logger";
 import { OrderExcelFile, OrderJsonData } from "../../../../types/orders";
 import { addOrderToExcel } from "../../../../utils/files";
+import { sendOrderMarketSold } from "../../../telegram/channels/orderMarketChannel";
 
 const marketSell = async ({ amount }: MarketSellT) => {
   return await marketOrder({ side: "SELL", amount });
@@ -108,6 +109,15 @@ const marketOrderSell = async ({
                   fileName: ordersFileName,
                 })
               );
+
+              sendOrderMarketSold({
+                symbol: MARKET,
+                price: sellOrder.fills
+                  ? parseFloat(sellOrder.fills[0].price)
+                  : price,
+                amount: tsorder.amount,
+                profit: currentOrder.profit,
+              });
             }
           });
         });

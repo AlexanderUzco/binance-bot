@@ -34,6 +34,7 @@ import {
   marketOrderSell,
   marketSell,
 } from "./modules/binance/orderType/market/sellOrder";
+import { bot as TelegramBot } from "./modules/telegram";
 
 let Storage = require("node-storage");
 const store = new Storage(`./analytics/data/${MARKET}.json`);
@@ -92,6 +93,10 @@ const broadcast = async () => {
         logLogo();
 
         log("=====================================================");
+        logColor(
+          TelegramBot ? colors.green : colors.gray,
+          `Telegram Bot: ${TelegramBot ? "ON" : "OFF"}`
+        );
         logProfit({
           store,
           price: markePrice,
