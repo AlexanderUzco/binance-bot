@@ -5,7 +5,6 @@ const MARKET1 = process.env.MARKET1 as any;
 const MARKET2 = process.env.MARKET2 as any;
 const MARKET = `${MARKET1}${MARKET2}`;
 
-// Set transactions constants
 const BUY_ORDER_AMOUNT = process.env.BUY_ORDER_AMOUNT as unknown as number;
 const PRICE_PERCENT = process.env.PRICE_PERCENT as unknown as number;
 
