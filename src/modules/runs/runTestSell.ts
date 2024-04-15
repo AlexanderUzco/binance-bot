@@ -39,7 +39,7 @@ const sell = async (): Promise<void> => {
         id: order.orderId,
         total_price: parseFloat(order.cummulativeQuoteQty),
         commission: (order.fills && parseFloat(order.fills[0].commission)) || 0,
-        sold_price: (order.fills && parseFloat(order.fills[0].price)) || 0,
+        price: (order.fills && parseFloat(order.fills[0].price)) || 0,
         amount: parseFloat(quantity),
       },
       fileName: ordersFileName,
