@@ -19,4 +19,5 @@ export interface OrderExcelFile {
   total_price: number;
   commission: number;
   price: number;
+  profit?: number;
 }

@@ -38,7 +38,9 @@ const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
     order.symbol,
     order.amount,
     order.price,
+    order.commission,
     order.total_price,
+    order.profit,
   ];
 
   console.log(rowData);
