@@ -18,5 +18,5 @@ export interface OrderExcelFile {
   amount: number;
   total_price: number;
   commission: number;
-  sold_price: number;
+  price: number;
 }

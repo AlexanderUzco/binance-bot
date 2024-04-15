@@ -22,11 +22,13 @@ const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
     worksheet = workbook.addWorksheet("Orders");
     worksheet.columns = [
       { header: "ID", key: "id", width: 10 },
-      { header: "Type", key: "side", width: 10 },
-      { header: "Symbol", key: "symbol", width: 10 },
-      { header: "Quantity", key: "amount", width: 10 },
-      { header: "Market_Price", key: "sold_price", width: 15 },
+      { header: "Order", key: "side", width: 10 },
+      { header: "Market", key: "symbol", width: 10 },
+      { header: "Token_Quantity", key: "amount", width: 10 },
+      { header: "Market_Price", key: "price", width: 15 },
+      { header: "Commission", key: "commission", width: 15 },
       { header: "Total_Price", key: "total_price", width: 15 },
+      { header: "Profit", key: "profit", width: 15 },
     ];
   }
 
@@ -35,7 +37,7 @@ const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
     order.side,
     order.symbol,
     order.amount,
-    order.sold_price,
+    order.price,
     order.total_price,
   ];
 

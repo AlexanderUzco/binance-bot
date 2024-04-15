@@ -90,6 +90,9 @@ const marketOrderSell = async ({
 
               const orderExcel: OrderExcelFile = {
                 ...currentOrder,
+                price: sellOrder.fills
+                  ? parseFloat(sellOrder.fills[0].price)
+                  : price,
                 type: "MARKET",
                 symbol: MARKET,
                 side: "SELL",
