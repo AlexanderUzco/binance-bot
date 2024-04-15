@@ -67,7 +67,7 @@ const marketOrderSell = async ({
       parseFloat(store.get(`${MARKET1?.toLocaleLowerCase()}_balance`)) >=
         totalAmount
     ) {
-      const lotQuantity = await getQuantity(totalAmount);
+      const lotQuantity = await getQuantity({ amount: totalAmount });
       const sellOrder = await marketSell({
         amount: lotQuantity.toString(),
       });
