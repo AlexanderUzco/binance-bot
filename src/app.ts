@@ -10,7 +10,14 @@ import {
   SELL_ALL_ON_START,
   MIN_PRICE_TRANSACTION,
 } from "./environments";
-import { colors, logColor, log, logProfit, logFail } from "./utils/logger";
+import {
+  colors,
+  logColor,
+  log,
+  logProfit,
+  logFail,
+  logLogo,
+} from "./utils/logger";
 import client from "./modules/binance";
 import { createOrdersFileName, logErrorFile } from "./utils/files";
 import {
@@ -82,6 +89,8 @@ const broadcast = async () => {
       if (markePrice) {
         console.clear();
 
+        logLogo();
+
         log("=====================================================");
         logProfit({
           store,
@@ -92,10 +101,11 @@ const broadcast = async () => {
         const entryPrice = store.get("entry_price") as number;
         const entryFactor = markePrice - entryPrice;
         const entryPercent = ((100 * entryFactor) / entryPrice).toFixed(2);
-        log(
-          `Entry price: ${entryPrice} ${MARKET2} (${
+        logColor(
+          colors.orange,
+          `\nEntry price: ${entryPrice} ${MARKET2} (${
             parseInt(entryPercent) <= 0 ? "" : "+"
-          }${entryPercent}%)`
+          }${entryPercent}%)\n`
         );
         log("=====================================================");
 

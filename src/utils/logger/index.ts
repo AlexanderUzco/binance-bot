@@ -11,6 +11,7 @@ const colors = {
   green: "\x1b[32m",
   red: "\x1b[31m",
   gray: "\x1b[90m",
+  orange: "\x1b[33m",
 };
 
 // Log a message with a color
@@ -21,6 +22,17 @@ const logColor = (color: string, message: string) => {
 // Log a message
 const log = (message: string) => {
   console.log(message);
+};
+
+const logLogo = () => {
+  return logColor(
+    colors.green,
+    `
+    __             __   __  _____
+    |__) | |\\ | __ |__) /  \\  | 
+    |__) | | \\|    |__) \\__/  | 
+    `
+  );
 };
 
 const logProfit = async ({ store, price }: LogProfitT) => {
@@ -65,4 +77,4 @@ const logFail = () => {
   process.exit();
 };
 
-export { logFail, logProfit, logColor, log, colors };
+export { logFail, logProfit, logColor, log, logLogo, colors };
