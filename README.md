@@ -1,2 +1,3 @@
 # binance-bot
-Binance bot with Javascript
+
+Binance bot with Typescrip
