@@ -12,12 +12,9 @@ import {
   MARKET2,
   MARKET,
   BUY_ORDER_AMOUNT,
-  PRICE_PERCENT,
 } from "../../../../environments";
 import {
   GetToSoldT,
-  MarketBuyT,
-  MarketOrderBuyT,
   MarketOrderSellT,
   MarketSellT,
 } from "../../types/orderMarket";
@@ -102,7 +99,12 @@ const marketOrderSell = async ({
                   : 0,
               };
 
-              promises.push(addOrderToExcel(orderExcel, ordersFileName));
+              promises.push(
+                addOrderToExcel({
+                  order: orderExcel,
+                  fileName: ordersFileName,
+                })
+              );
             }
           });
         });

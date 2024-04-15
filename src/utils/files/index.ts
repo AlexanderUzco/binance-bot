@@ -2,8 +2,9 @@ import * as ExcelJS from "exceljs";
 import * as fs from "fs";
 import { OrderExcelFile } from "../../types/orders";
 import { MARKET } from "../../environments";
+import { AddOrderToExcelT } from "./types";
 
-const addOrderToExcel = async (order: OrderExcelFile, fileName: string) => {
+const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
   const workbook = new ExcelJS.Workbook();
   let worksheet: ExcelJS.Worksheet;
 
@@ -21,7 +22,7 @@ const addOrderToExcel = async (order: OrderExcelFile, fileName: string) => {
     worksheet = workbook.addWorksheet("Orders");
     worksheet.columns = [
       { header: "ID", key: "id", width: 10 },
-      { header: "Type", key: "type", width: 10 },
+      { header: "Type", key: "side", width: 10 },
       { header: "Symbol", key: "symbol", width: 10 },
       { header: "Quantity", key: "amount", width: 10 },
       { header: "Market_Price", key: "sold_price", width: 15 },
@@ -31,7 +32,7 @@ const addOrderToExcel = async (order: OrderExcelFile, fileName: string) => {
 
   const rowData = [
     order.id,
-    order.type,
+    order.side,
     order.symbol,
     order.amount,
     order.sold_price,

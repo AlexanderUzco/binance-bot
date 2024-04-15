@@ -102,7 +102,10 @@ const marketOrderBuy = async ({
 
       await calculateProfit({ store });
 
-      await addOrderToExcel(orderExcel, ordersFileName);
+      await addOrderToExcel({
+        order: orderExcel,
+        fileName: ordersFileName,
+      });
     } else
       newPriceReset({
         currentMarket: 1,

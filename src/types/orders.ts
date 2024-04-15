@@ -10,10 +10,13 @@ export interface OrderJsonData {
   amount: number;
 }
 
-export interface OrderExcelFile extends OrderJsonData {
+export interface OrderExcelFile {
+  id: number;
   type: string;
   symbol: string;
   side: string;
+  amount: number;
   total_price: number;
   commission: number;
+  sold_price: number;
 }

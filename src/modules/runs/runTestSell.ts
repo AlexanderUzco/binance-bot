@@ -33,20 +33,17 @@ const sell = async (): Promise<void> => {
 
     const order = await client.order(orderData as NewOrderSpot);
 
-    await addOrderToExcel(
-      {
+    await addOrderToExcel({
+      order: {
         ...orderData,
         id: order.orderId,
         total_price: parseFloat(order.cummulativeQuoteQty),
-        status: order.status,
         commission: (order.fills && parseFloat(order.fills[0].commission)) || 0,
-        buy_price: 0,
-        sell_price: 0,
         sold_price: (order.fills && parseFloat(order.fills[0].price)) || 0,
         amount: parseFloat(quantity),
       },
-      ordersFileName
-    );
+      fileName: ordersFileName,
+    });
 
     logColor(colors.green, `Order placed: ${order.orderId}`);
   } catch (error: any) {
