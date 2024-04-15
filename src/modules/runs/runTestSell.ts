@@ -1,8 +1,8 @@
 require("dotenv").config();
-import { colors, logColor, log } from "../utils/logger";
+import { colors, logColor, log } from "../../utils/logger";
 import client from "../binance";
 import { NewOrderSpot, OrderType } from "binance-api-node";
-import { addOrderToExcel, createOrdersFileName } from "../utils/fileFunctions";
+import { addOrderToExcel, createOrdersFileName } from "../../utils/files";
 
 const ordersFileName = createOrdersFileName();
 const market = `${process.env.MARKET1}${process.env.MARKET2}`;

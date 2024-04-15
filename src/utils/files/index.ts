@@ -1,6 +1,7 @@
 import * as ExcelJS from "exceljs";
 import * as fs from "fs";
-import { OrderExcelFile } from "../types/orders";
+import { OrderExcelFile } from "../../types/orders";
+import { MARKET } from "../../environments";
 
 const addOrderToExcel = async (order: OrderExcelFile, fileName: string) => {
   const workbook = new ExcelJS.Workbook();
@@ -43,25 +44,25 @@ const addOrderToExcel = async (order: OrderExcelFile, fileName: string) => {
 
   await workbook.xlsx.writeFile(fileName).catch((error) => {
     console.log("Error saving the file", error);
-    logError(error);
+    logErrorFile(error);
   });
 
   console.log(`Order saved to ${fileName}`);
 };
 
 const createOrdersFileName = (): string => {
-  const ordersFolder = "./orders";
+  const ordersFolder = "./analytics/orders";
 
   if (!fs.existsSync(ordersFolder)) {
     fs.mkdirSync(ordersFolder);
   }
 
-  const ordersFileName = `${ordersFolder}/orders_${Date.now()}.xlsx`;
+  const ordersFileName = `${ordersFolder}/orders_${MARKET}_${Date.now()}.xlsx`;
 
   return ordersFileName;
 };
 
-const logError = (error: Error | Record<string, any>) => {
+const logErrorFile = (error: Error | Record<string, any>) => {
   let errorMessage = "";
 
   if (error instanceof Error) {
@@ -72,7 +73,7 @@ const logError = (error: Error | Record<string, any>) => {
     errorMessage = `${new Date().toISOString()}: Unknown error type\n`;
   }
 
-  fs.appendFileSync("error.log", errorMessage);
+  fs.appendFileSync("./analytics/error.log", errorMessage);
 };
 
-export { addOrderToExcel, createOrdersFileName, logError };
+export { addOrderToExcel, createOrdersFileName, logErrorFile };
