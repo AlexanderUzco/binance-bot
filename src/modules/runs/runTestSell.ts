@@ -3,7 +3,8 @@ import { colors, logColor, log } from "../../utils/logger";
 import client from "../binance";
 import { NewOrderSpot, OrderType } from "binance-api-node";
 import { addOrderToExcel, createOrdersFileName } from "../../utils/files";
-import { sendOrderMarketSold } from "../telegram/channels/orderMarketChannel";
+import { sendOrderMarketSold } from "../telegram/messages/orderMarketMessages";
+import { getRealProfits } from "../binance/binanceFunctions";
 
 const ordersFileName = createOrdersFileName();
 const market = `${process.env.MARKET1}${process.env.MARKET2}`;
@@ -51,6 +52,7 @@ const sell = async (): Promise<void> => {
       price: order.fills ? parseFloat(order.fills[0].price) : 0,
       amount: parseFloat(quantity),
       profit: parseFloat(order.cummulativeQuoteQty),
+      totalSoldProfit: 0,
     });
 
     logColor(colors.green, `Order placed: ${order.orderId}`);

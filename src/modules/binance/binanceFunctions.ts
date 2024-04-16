@@ -3,6 +3,7 @@ import {
   CalculateProfitT,
   GetOrderIdT,
   GetQuantityT,
+  GetRealProfitsT,
   MarketOrderT,
   NewPriceResetT,
   UpdateBalancesT,
@@ -12,10 +13,16 @@ import {
   MARKET2,
   MARKET,
   BUY_ORDER_AMOUNT,
-  PRICE_PERCENT,
   STOP_LOSS_GRID_IS_FIFO,
+  STOP_LOSS_BOT,
+  TAKE_PROFIT_BOT,
+  SELL_ALL_ON_CLOSE,
 } from "../../environments";
 import { OrderType } from "binance-api-node";
+import { colors, logColor } from "../../utils/logger";
+import { closeBot } from "../../utils/bot";
+import { sellAll } from "./orderType/market/sellOrder";
+import { sendProfitUpdateMessage } from "../telegram/messages/binanceMessage";
 
 /**
  * @returns {Object} An object containing the balances of the specified assets.
@@ -158,6 +165,111 @@ const marketOrder = async ({ side, amount }: MarketOrderT) => {
   });
 };
 
+const getRealProfits = ({ price, store }: GetRealProfitsT) => {
+  const m1Balance = parseFloat(store.get(`${MARKET1.toLowerCase()}_balance`));
+  const m2Balance = parseFloat(store.get(`${MARKET2.toLowerCase()}_balance`));
+
+  const initialBalance1 = parseFloat(
+    store.get(`initial_${MARKET1.toLowerCase()}_balance`)
+  );
+  const initialBalance2 = parseFloat(
+    store.get(`initial_${MARKET2.toLowerCase()}_balance`)
+  );
+
+  const totalProfit =
+    (m1Balance - initialBalance1) * price + (m2Balance - initialBalance2);
+
+  return totalProfit;
+};
+
+const verifyTakeProfit = async ({ store, marketPrice }: any) => {
+  const totalProfits = getRealProfits({
+    store,
+    price: marketPrice,
+  });
+
+  if (!isNaN(totalProfits)) {
+    const totalProfitsPercent = (
+      (100 * totalProfits) /
+      store.get(`initial_${MARKET2.toLowerCase()}_balance`)
+    ).toFixed(3);
+
+    STOP_LOSS_BOT &&
+      logColor(
+        totalProfits < 0
+          ? colors.red
+          : totalProfits == 0
+          ? colors.gray
+          : colors.green,
+        `Real Profits [SL = ${STOP_LOSS_BOT}%, TP = ${TAKE_PROFIT_BOT}%]: ${totalProfitsPercent}% ==> ${
+          totalProfits <= 0 ? "" : "+"
+        }${totalProfits.toFixed(3)} ${MARKET2}`
+      );
+
+    if (parseFloat(totalProfitsPercent) >= TAKE_PROFIT_BOT) {
+      let messageData;
+
+      logColor(colors.green, "Closing bot with profits...");
+
+      await closeBot();
+
+      if (SELL_ALL_ON_CLOSE) {
+        logColor(colors.green, "Selling all assets...");
+        const resSellAll = await sellAll();
+
+        if (resSellAll) messageData = resSellAll;
+      }
+
+      sendProfitUpdateMessage({
+        realProfit: totalProfits,
+        totalSold: messageData?.totalSold,
+        totalAmount: messageData?.totalAmount,
+        price: messageData?.price,
+        type: "takeProfit",
+      });
+
+      return;
+    }
+  }
+};
+
+const verifyStopLoss = async ({ store, marketPrice }: any) => {
+  const totalProfits = getRealProfits({
+    store,
+    price: marketPrice,
+  });
+
+  const totalProfitsPercent = (
+    (100 * totalProfits) /
+    store.get(`initial_${MARKET2.toLowerCase()}_balance`)
+  ).toFixed(3);
+
+  if (parseFloat(totalProfitsPercent) <= -1 * STOP_LOSS_BOT) {
+    let messageData;
+
+    logColor(colors.red, "Closing bot with losses...");
+
+    await closeBot();
+
+    if (SELL_ALL_ON_CLOSE) {
+      logColor(colors.green, "Selling all assets...");
+      const resSellAll = await sellAll();
+
+      if (resSellAll) messageData = resSellAll;
+    }
+
+    sendProfitUpdateMessage({
+      realProfit: totalProfits,
+      totalSold: messageData?.totalSold,
+      totalAmount: messageData?.totalAmount,
+      price: messageData?.price,
+      type: "stopLoss",
+    });
+
+    return;
+  }
+};
+
 export {
   getBalances,
   getPrice,
@@ -168,4 +280,7 @@ export {
   calculateProfit,
   getOrderId,
   marketOrder,
+  getRealProfits,
+  verifyTakeProfit,
+  verifyStopLoss,
 };

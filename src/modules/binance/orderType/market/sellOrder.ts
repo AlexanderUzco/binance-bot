@@ -1,8 +1,10 @@
 import client from "../..";
 import {
   calculateProfit,
+  getBalances,
   getOrderId,
   getQuantity,
+  getRealProfits,
   marketOrder,
   newPriceReset,
   updateBalances,
@@ -18,10 +20,11 @@ import {
   MarketOrderSellT,
   MarketSellT,
 } from "../../types/orderMarket";
-import { colors, log, logColor } from "../../../../utils/logger";
+import { colors, log, logColor, logFail } from "../../../../utils/logger";
 import { OrderExcelFile, OrderJsonData } from "../../../../types/orders";
 import { addOrderToExcel } from "../../../../utils/files";
-import { sendOrderMarketSold } from "../../../telegram/channels/orderMarketChannel";
+import { sendOrderMarketSold } from "../../../telegram/messages/orderMarketMessages";
+import { sleep } from "../../../../utils/bot";
 
 const marketSell = async ({ amount }: MarketSellT) => {
   return await marketOrder({ side: "SELL", amount });
@@ -110,6 +113,11 @@ const marketOrderSell = async ({
                 })
               );
 
+              const totalSoldProfit = getRealProfits({
+                price,
+                store,
+              });
+
               sendOrderMarketSold({
                 symbol: MARKET,
                 price: sellOrder.fills
@@ -117,6 +125,7 @@ const marketOrderSell = async ({
                   : price,
                 amount: tsorder.amount,
                 profit: currentOrder.profit,
+                totalSoldProfit,
               });
             }
           });
@@ -151,4 +160,26 @@ const marketOrderSell = async ({
   } else store.put("start_price", price);
 };
 
-export { marketSell, getToSold, marketOrderSell };
+const sellAll = async () => {
+  await sleep(3000);
+  const balances = await getBalances();
+  const totalAmount = balances[MARKET1];
+  if (totalAmount > 0) {
+    try {
+      const lotQuantity = await getQuantity({ amount: totalAmount });
+      const res = await marketSell({ amount: lotQuantity });
+      if (res && res.status === "FILLED") {
+        logColor(colors.green, "Bot sold all coins!");
+        return {
+          totalSold: parseInt(res.cummulativeQuoteQty),
+          totalAmount: totalAmount,
+          price: res.fills && parseFloat(res.fills[0].price),
+        };
+      } else {
+        logFail();
+      }
+    } catch (err) {}
+  }
+};
+
+export { marketSell, getToSold, marketOrderSell, sellAll };

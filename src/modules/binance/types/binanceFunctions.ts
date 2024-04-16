@@ -24,3 +24,8 @@ export type MarketOrderT = {
   side: "SELL" | "BUY";
   amount: string;
 };
+
+export type GetRealProfitsT = {
+  store: any;
+  price: number;
+};

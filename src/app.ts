@@ -1,5 +1,4 @@
 require("dotenv").config();
-import * as fs from "fs";
 import {
   MARKET1,
   MARKET2,
@@ -9,85 +8,33 @@ import {
   SLEEP_TIME,
   SELL_ALL_ON_START,
   MIN_PRICE_TRANSACTION,
+  STOP_LOSS_BOT,
+  TAKE_PROFIT_BOT,
 } from "./environments";
-import {
-  colors,
-  logColor,
-  log,
-  logProfit,
-  logFail,
-  logLogo,
-} from "./utils/logger";
-import client from "./modules/binance";
+import { colors, logColor, log, logProfit, logLogo } from "./utils/logger";
 import { createOrdersFileName, logErrorFile } from "./utils/files";
 import {
   checkBalance,
-  getBalances,
   getPrice,
-  getQuantity,
+  verifyStopLoss,
+  verifyTakeProfit,
 } from "./modules/binance/binanceFunctions";
-import {
-  getMinBuy,
-  marketOrderBuy,
-} from "./modules/binance/orderType/market/buyOrder";
-import {
-  marketOrderSell,
-  marketSell,
-} from "./modules/binance/orderType/market/sellOrder";
+import { marketOrderBuy } from "./modules/binance/orderType/market/buyOrder";
+import { marketOrderSell } from "./modules/binance/orderType/market/sellOrder";
 import { bot as TelegramBot } from "./modules/telegram";
+import { clearStart, sleep } from "./utils/bot";
 
 let Storage = require("node-storage");
 const store = new Storage(`./analytics/data/${MARKET}.json`);
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const ordersFileName = createOrdersFileName();
-
-const closeBot = async () => {
-  try {
-    fs.unlinkSync(`./data/${MARKET}.json`);
-  } catch (ee) {}
-};
-
-const clearStart = async () => {
-  await closeBot();
-
-  const balances = await getBalances();
-
-  const totalAmount = balances[MARKET1];
-
-  const price = await getPrice();
-
-  const minSell = (await getMinBuy()) / price;
-
-  if (totalAmount >= minSell) {
-    try {
-      const lotQuantity = await getQuantity({
-        amount: totalAmount,
-      });
-
-      const res = await marketSell({
-        amount: lotQuantity,
-      });
-
-      if (res && res.status === "FILLED") {
-        logColor(colors.green, "Iniciando en modo limpio...");
-        await sleep(3000);
-      } else {
-        logFail();
-      }
-    } catch (err) {
-      logFail();
-    }
-  }
-};
 
 const broadcast = async () => {
   while (true) {
     try {
-      const prices = await client.prices({ symbol: MARKET });
-      const markePrice = parseFloat(prices[MARKET]);
+      const marketPrice = await getPrice();
       const startPrice = parseFloat(store.get("start_price"));
 
-      if (markePrice) {
+      if (marketPrice) {
         console.clear();
 
         logLogo();
@@ -99,12 +46,20 @@ const broadcast = async () => {
         );
         logProfit({
           store,
-          price: markePrice,
+          price: marketPrice,
         });
+
+        TAKE_PROFIT_BOT && verifyTakeProfit({ store, marketPrice });
+
+        STOP_LOSS_BOT &&
+          verifyStopLoss({
+            store,
+            marketPrice,
+          });
         log("=====================================================");
 
         const entryPrice = store.get("entry_price") as number;
-        const entryFactor = markePrice - entryPrice;
+        const entryFactor = marketPrice - entryPrice;
         const entryPercent = ((100 * entryFactor) / entryPrice).toFixed(2);
         logColor(
           colors.orange,
@@ -115,39 +70,44 @@ const broadcast = async () => {
         log("=====================================================");
 
         log(`Prev price: ${startPrice} ${MARKET2}`);
-        if (markePrice < startPrice) {
-          let factor = startPrice - markePrice;
+
+        if (marketPrice < startPrice) {
+          let factor = startPrice - marketPrice;
           let percentage = (factor / startPrice) * 100;
 
           logColor(
             colors.red,
-            `New price: ${markePrice} ${MARKET2} ==> -${percentage.toFixed(3)}%`
+            `New price: ${marketPrice} ${MARKET2} ==> -${percentage.toFixed(
+              3
+            )}%`
           );
 
           store.put("percentage", `${parseFloat(percentage.toFixed(3))}`);
 
           if (percentage >= PRICE_PERCENT) {
             await marketOrderBuy({
-              price: markePrice,
+              price: marketPrice,
               amount: BUY_ORDER_AMOUNT,
               store,
               ordersFileName,
             });
           }
-        } else if (markePrice > startPrice) {
-          let factor = markePrice - startPrice;
+        } else if (marketPrice > startPrice) {
+          let factor = marketPrice - startPrice;
           let percentage = (factor / startPrice) * 100;
 
           logColor(
             colors.green,
-            `New price: ${markePrice} ${MARKET2} ==> +${percentage.toFixed(3)}%`
+            `New price: ${marketPrice} ${MARKET2} ==> +${percentage.toFixed(
+              3
+            )}%`
           );
 
           store.put("percentage", `${parseFloat(percentage.toFixed(3))}`);
 
           if (percentage >= PRICE_PERCENT) {
             await marketOrderSell({
-              price: markePrice,
+              price: marketPrice,
               store,
               ordersFileName,
             });
@@ -158,8 +118,8 @@ const broadcast = async () => {
         }
       }
     } catch (error: any) {
-      console.log(error);
-      logErrorFile(error);
+      // console.log(error);
+      // logErrorFile(error);
     }
 
     await sleep(SLEEP_TIME as unknown as number);
@@ -195,7 +155,7 @@ const init = async () => {
       store.get(`${MARKET2.toLowerCase()}_balance`)
     );
 
-    //TODO: Verify if the order amount is less than $1
+    //TODO: Verify if the order amount is less than MIN_PRICE_TRANSACTION
     if (price * BUY_ORDER_AMOUNT < MIN_PRICE_TRANSACTION) {
       const requiredAmount = (1 / price).toFixed(8);
       logColor(
