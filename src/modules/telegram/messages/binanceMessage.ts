@@ -6,6 +6,7 @@ const sendProfitUpdateMessage = ({
   totalSold,
   totalAmount,
   price,
+  type,
 }: SendProfitUpdateMessageT) => {
   const existTotalSold = totalSold
     ? `💰Total Sold: $${totalSold.toFixed(8)} USDT ${
@@ -19,7 +20,7 @@ const sendProfitUpdateMessage = ({
   const message = `
 🤖 Bin-Bot: OFF 🛑
 
-📈 Take Profit Update:
+📈 ${type === "takeProfit" ? "Take profit" : "Stop loss"} Update:
 💸Total Profit: $${realProfit.toFixed(8)}USDT
 ${existTotalSold}
 ${existTotalAmount}

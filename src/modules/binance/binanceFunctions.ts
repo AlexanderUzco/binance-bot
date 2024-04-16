@@ -228,9 +228,11 @@ const verifyTakeProfit = async ({ store, marketPrice }: any) => {
         type: "takeProfit",
       });
 
-      return;
+      return true;
     }
   }
+
+  return false;
 };
 
 const verifyStopLoss = async ({ store, marketPrice }: any) => {
@@ -266,8 +268,10 @@ const verifyStopLoss = async ({ store, marketPrice }: any) => {
       type: "stopLoss",
     });
 
-    return;
+    return true;
   }
+
+  return false;
 };
 
 export {

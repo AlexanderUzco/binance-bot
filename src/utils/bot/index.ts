@@ -13,7 +13,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const closeBot = async () => {
   try {
-    fs.unlinkSync(`./data/${MARKET}.json`);
+    fs.unlinkSync(`./analytics/data/${MARKET}.json`);
   } catch (ee) {}
 };
 

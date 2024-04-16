@@ -49,13 +49,16 @@ const broadcast = async () => {
           price: marketPrice,
         });
 
-        TAKE_PROFIT_BOT && verifyTakeProfit({ store, marketPrice });
+        const takeProfitActivated =
+          (TAKE_PROFIT_BOT &&
+            (await verifyTakeProfit({ store, marketPrice }))) ||
+          false;
+        const stopLossActivated =
+          (STOP_LOSS_BOT && (await verifyStopLoss({ store, marketPrice }))) ||
+          false;
 
-        STOP_LOSS_BOT &&
-          verifyStopLoss({
-            store,
-            marketPrice,
-          });
+        if (takeProfitActivated || stopLossActivated) break;
+
         log("=====================================================");
 
         const entryPrice = store.get("entry_price") as number;
