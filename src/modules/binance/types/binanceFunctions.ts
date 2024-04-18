@@ -1,3 +1,5 @@
+import { CandleChartInterval_LT } from "binance-api-node";
+
 export type GetQuantityT = {
   amount: number;
 };
@@ -28,4 +30,11 @@ export type MarketOrderT = {
 export type GetRealProfitsT = {
   store: any;
   price: number;
+};
+
+export type GetCandlesT = {
+  symbol: string;
+  interval: CandleChartInterval_LT;
+  limit?: number;
+  candleType: "close" | "open" | "high" | "low";
 };

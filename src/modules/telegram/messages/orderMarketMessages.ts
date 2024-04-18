@@ -1,5 +1,13 @@
 import { sendMessage } from ".";
-import { SendOrderMarketSoldT } from "../types/messages";
+import { SendBotActivatedT, SendOrderMarketSoldT } from "../types/messages";
+
+let sendedFirstMessage = false;
+
+const sendBotActivated = ({ botRun }: SendBotActivatedT) => {
+  const message = `
+  🚀 Bot: (${botRun}) has been activated! 🎉`;
+  sendMessage(message);
+};
 
 const sendOrderMarketSold = ({
   symbol,
@@ -9,18 +17,27 @@ const sendOrderMarketSold = ({
   totalSoldProfit,
 }: SendOrderMarketSoldT) => {
   const message = `
+  ${
+    !sendedFirstMessage
+      ? ` 
 🚀 Successful Sale! 🎉
 
-Hooray! A sale has been successfully executed!
+Hooray! A sale has been successfully executed! (${symbol}) 🎉
+`
+      : `
+Sold order has been executed! (${symbol}) 🎉
+`
+  }
 
-📊 Symbol: ${symbol}
 💰 Price: $${price.toFixed(8)}
-📈 Amount: ${amount}
+📈 Tokens: ${amount}
+📈 Amount: $${(price * amount).toFixed(8)}
 💸 Profit: $${profit.toFixed(8)}
 📈 Real Profit: $${totalSoldProfit.toFixed(8)}
 `;
+  if (!sendedFirstMessage) sendedFirstMessage = true;
 
   sendMessage(message);
 };
 
-export { sendOrderMarketSold };
+export { sendOrderMarketSold, sendBotActivated };

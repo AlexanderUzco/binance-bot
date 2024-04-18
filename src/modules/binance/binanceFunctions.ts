@@ -1,6 +1,7 @@
 import client from ".";
 import {
   CalculateProfitT,
+  GetCandlesT,
   GetOrderIdT,
   GetQuantityT,
   GetRealProfitsT,
@@ -165,6 +166,11 @@ const marketOrder = async ({ side, amount }: MarketOrderT) => {
   });
 };
 
+/**
+ * @param {number} price - The price of the market.
+ * @param {Object} store - The store object.
+ * @returns {number} - The real profits.
+ */
 const getRealProfits = ({ price, store }: GetRealProfitsT) => {
   const m1Balance = parseFloat(store.get(`${MARKET1.toLowerCase()}_balance`));
   const m2Balance = parseFloat(store.get(`${MARKET2.toLowerCase()}_balance`));
@@ -182,6 +188,14 @@ const getRealProfits = ({ price, store }: GetRealProfitsT) => {
   return totalProfit;
 };
 
+/**
+ *
+ * Verifies if the bot should be closed due to take profit.
+ * @param {Object} store - The store object.
+ * @param {number} marketPrice - The price of the market.
+ * @returns {boolean} - A boolean indicating if the bot should be closed.
+ *
+ */
 const verifyTakeProfit = async ({ store, marketPrice }: any) => {
   const totalProfits = getRealProfits({
     store,
@@ -235,6 +249,14 @@ const verifyTakeProfit = async ({ store, marketPrice }: any) => {
   return false;
 };
 
+/**
+ *
+ * Verifies if the bot should be closed due to stop loss.
+ * @param {Object} store - The store object.
+ * @param {number} marketPrice - The price of the market.
+ * @returns {boolean} - A boolean indicating if the bot should be closed.
+ *
+ */
 const verifyStopLoss = async ({ store, marketPrice }: any) => {
   const totalProfits = getRealProfits({
     store,
@@ -274,6 +296,33 @@ const verifyStopLoss = async ({ store, marketPrice }: any) => {
   return false;
 };
 
+/**
+ * Retrieves prices of the candles.
+ * @param {Object} params - The parameters to get the candles.
+ * @returns {Array<number>} - An array containing the closing prices of the candles.
+ */
+const getCandles = async (params: GetCandlesT) => {
+  const { symbol, interval, limit, candleType } = params;
+
+  try {
+    const response = await client.candles({
+      symbol,
+      interval,
+      limit,
+    });
+
+    const closings = response.map((candle) => parseFloat(candle[candleType]));
+
+    return closings;
+  } catch (error) {
+    console.error(
+      "Error al obtener los precios de cierre de las velas:",
+      error
+    );
+    throw error;
+  }
+};
+
 export {
   getBalances,
   getPrice,
@@ -287,4 +336,5 @@ export {
   getRealProfits,
   verifyTakeProfit,
   verifyStopLoss,
+  getCandles,
 };

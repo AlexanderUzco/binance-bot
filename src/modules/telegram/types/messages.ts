@@ -13,3 +13,7 @@ export type SendProfitUpdateMessageT = {
   totalAmount?: number;
   price?: number;
 };
+
+export type SendBotActivatedT = {
+  botRun: string;
+};

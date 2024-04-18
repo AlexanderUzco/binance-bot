@@ -2,7 +2,7 @@ import * as ExcelJS from "exceljs";
 import * as fs from "fs";
 import { OrderExcelFile } from "../../types/orders";
 import { MARKET } from "../../environments";
-import { AddOrderToExcelT } from "./types";
+import { AddOrderToExcelT, CreateOrdersFileNameT } from "./types";
 
 const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
   const workbook = new ExcelJS.Workbook();
@@ -55,14 +55,14 @@ const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
   console.log(`Order saved to ${fileName}`);
 };
 
-const createOrdersFileName = (): string => {
-  const ordersFolder = "./analytics/orders";
+const createOrdersFileName = ({ botRun }: CreateOrdersFileNameT): string => {
+  const ordersFolder = `./analytics/orders/${botRun}`;
 
   if (!fs.existsSync(ordersFolder)) {
     fs.mkdirSync(ordersFolder);
   }
 
-  const ordersFileName = `${ordersFolder}/orders_${MARKET}_${Date.now()}.xlsx`;
+  const ordersFileName = `${ordersFolder}/orders_${botRun}_${MARKET}_${Date.now()}.xlsx`;
 
   return ordersFileName;
 };

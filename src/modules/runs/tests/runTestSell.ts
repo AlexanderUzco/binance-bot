@@ -1,12 +1,14 @@
 require("dotenv").config();
-import { colors, logColor, log } from "../../utils/logger";
-import client from "../binance";
+import { colors, logColor, log } from "../../../utils/logger";
+import client from "../../binance";
 import { NewOrderSpot, OrderType } from "binance-api-node";
-import { addOrderToExcel, createOrdersFileName } from "../../utils/files";
-import { sendOrderMarketSold } from "../telegram/messages/orderMarketMessages";
-import { getRealProfits } from "../binance/binanceFunctions";
+import { addOrderToExcel, createOrdersFileName } from "../../../utils/files";
+import { sendOrderMarketSold } from "../../telegram/messages/orderMarketMessages";
+import { getRealProfits } from "../../binance/binanceFunctions";
 
-const ordersFileName = createOrdersFileName();
+const ordersFileName = createOrdersFileName({
+  botRun: "base",
+});
 const market = `${process.env.MARKET1}${process.env.MARKET2}`;
 const amount = process.env.BUY_ORDER_AMOUNT as unknown as number;
 

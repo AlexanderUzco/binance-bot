@@ -11,9 +11,11 @@
   },
   "scripts": {
     "build": "tsc --outDir dist",
-    "start": "node dist/app.js resumen",
-    "bot:run": "npm run build && npm start",
-    "bot:run-test-sell": "npm run build && node dist/modules/runs/runTestSell.js"
+    "start-base": "node dist/app.js base resumen",
+    "start-bollinger": "node dist/app.js bollinger resumen",
+    "bot:run-base": "npm run build && npm run start-base",
+    "bot:run-bollinger": "npm run build && npm run start-bollinger",
+    "bot:test:test-sell": "npm run build && node dist/modules/runs/runTestSell.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +25,7 @@
     "comma-number": "^2.1.0",
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
+    "indicatorts": "^2.0.0",
     "node-binance-api": "^0.13.1",
     "node-storage": "^0.0.9",
     "node-store": "^0.0.1",

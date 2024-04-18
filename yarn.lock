@@ -1062,6 +1062,11 @@ immediate@~3.0.5:
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==
 
+indicatorts@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/indicatorts/-/indicatorts-2.0.0.tgz#e896d70acd9c27b92434532da4c187ae8ed35d68"
+  integrity sha512-t9k53dNncWlWQY9FAQ5QzTJfTxJ0l+JLequU3k3RoDeNTXjRwDIHGyxtWhreDKLRYMgsc4uNRwzsHPku8uv2TA==
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
