@@ -8,6 +8,8 @@ import {
   MarketOrderT,
   NewPriceResetT,
   UpdateBalancesT,
+  VerifyStopLossT,
+  VerifyTakeProfitT,
 } from "./types/binanceFunctions";
 import {
   MARKET1,
@@ -196,7 +198,11 @@ const getRealProfits = ({ price, store }: GetRealProfitsT) => {
  * @returns {boolean} - A boolean indicating if the bot should be closed.
  *
  */
-const verifyTakeProfit = async ({ store, marketPrice }: any) => {
+const verifyTakeProfit = async ({
+  store,
+  marketPrice,
+  ordersFileName,
+}: VerifyTakeProfitT) => {
   const totalProfits = getRealProfits({
     store,
     price: marketPrice,
@@ -229,7 +235,7 @@ const verifyTakeProfit = async ({ store, marketPrice }: any) => {
 
       if (SELL_ALL_ON_CLOSE) {
         logColor(colors.green, "Selling all assets...");
-        const resSellAll = await sellAll();
+        const resSellAll = await sellAll({ ordersFileName });
 
         if (resSellAll) messageData = resSellAll;
       }
@@ -257,7 +263,11 @@ const verifyTakeProfit = async ({ store, marketPrice }: any) => {
  * @returns {boolean} - A boolean indicating if the bot should be closed.
  *
  */
-const verifyStopLoss = async ({ store, marketPrice }: any) => {
+const verifyStopLoss = async ({
+  store,
+  marketPrice,
+  ordersFileName,
+}: VerifyStopLossT) => {
   const totalProfits = getRealProfits({
     store,
     price: marketPrice,
@@ -277,7 +287,7 @@ const verifyStopLoss = async ({ store, marketPrice }: any) => {
 
     if (SELL_ALL_ON_CLOSE) {
       logColor(colors.green, "Selling all assets...");
-      const resSellAll = await sellAll();
+      const resSellAll = await sellAll({ ordersFileName });
 
       if (resSellAll) messageData = resSellAll;
     }

@@ -19,6 +19,7 @@ import {
   GetToSoldT,
   MarketOrderSellT,
   MarketSellT,
+  SellAllT,
 } from "../../types/orderMarket";
 import { colors, log, logColor, logFail } from "../../../../utils/logger";
 import { OrderExcelFile, OrderJsonData } from "../../../../types/orders";
@@ -36,11 +37,7 @@ const getToSold = ({ store, price, changeStatus }: GetToSoldT) => {
 
   for (var i = 0; i < orders.length; i++) {
     var order = orders[i];
-    if (
-      price >= order.sell_price ||
-      (getOrderId({ store }) === order.id &&
-        store.get(`${MARKET2.toLowerCase()}_balance`) < BUY_ORDER_AMOUNT)
-    ) {
+    if (price >= order.sell_price) {
       if (changeStatus) {
         order.sold_price = price;
         order.status = "selling";
@@ -160,7 +157,7 @@ const marketOrderSell = async ({
   } else store.put("start_price", price);
 };
 
-const sellAll = async () => {
+const sellAll = async ({ ordersFileName }: SellAllT) => {
   await sleep(3000);
   const balances = await getBalances();
   const totalAmount = balances[MARKET1];
@@ -169,6 +166,34 @@ const sellAll = async () => {
       const lotQuantity = await getQuantity({ amount: totalAmount });
       const res = await marketSell({ amount: lotQuantity });
       if (res && res.status === "FILLED") {
+        let order: OrderJsonData = {
+          id: res.orderId,
+          buy_price: res.fills ? parseFloat(res.fills[0].price) : 0,
+          sell_price: 0,
+          sold_price: 0,
+          status: "bought",
+          profit: 0,
+          amount: res.fills
+            ? parseFloat(res.executedQty) -
+              (res.fills[0].commission as unknown as number)
+            : parseFloat(res.executedQty),
+        };
+
+        let orderExcel: OrderExcelFile = {
+          ...order,
+          price: res.fills ? parseFloat(res.fills[0].price) : 0,
+          type: "MARKET",
+          symbol: MARKET,
+          side: "BUY",
+          total_price: parseFloat(res.cummulativeQuoteQty),
+          commission: res.fills ? parseFloat(res.fills[0].commission) : 0,
+        };
+
+        await addOrderToExcel({
+          order: orderExcel,
+          fileName: ordersFileName,
+        });
+
         logColor(colors.green, "Bot sold all coins!");
         return {
           totalSold: parseInt(res.cummulativeQuoteQty),

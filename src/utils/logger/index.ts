@@ -77,4 +77,18 @@ const logFail = () => {
   process.exit();
 };
 
-export { logFail, logProfit, logColor, log, logLogo, colors };
+const logOrderToSell = ({ store, marketPrice }: any) => {
+  const orders = store.get("orders");
+
+  // Get first 3 orders and log them
+  orders.slice(0, 3).forEach((order: any) => {
+    logColor(
+      colors.green,
+      `Sell ${order.amount} ${MARKET1} for ${(
+        order.amount * marketPrice
+      ).toFixed(2)} ${MARKET2}, Price: ${order.sell_price}`
+    );
+  });
+};
+
+export { logFail, logProfit, logColor, log, logLogo, logOrderToSell, colors };

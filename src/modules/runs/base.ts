@@ -56,10 +56,11 @@ const broadcast = async () => {
 
         const takeProfitActivated =
           (TAKE_PROFIT_BOT &&
-            (await verifyTakeProfit({ store, marketPrice }))) ||
+            (await verifyTakeProfit({ store, marketPrice, ordersFileName }))) ||
           false;
         const stopLossActivated =
-          (STOP_LOSS_BOT && (await verifyStopLoss({ store, marketPrice }))) ||
+          (STOP_LOSS_BOT &&
+            (await verifyStopLoss({ store, marketPrice, ordersFileName }))) ||
           false;
 
         if (takeProfitActivated || stopLossActivated) break;

@@ -12,8 +12,16 @@ import {
   TAKE_PROFIT_BOT,
   BOLLINGER_BANDS_PERCENT_SELL,
   BOLLINGER_BANDS_PERCENT_BUY,
+  APPLY_RSI,
 } from "../../environments";
-import { colors, logColor, log, logProfit, logLogo } from "../../utils/logger";
+import {
+  colors,
+  logColor,
+  log,
+  logProfit,
+  logLogo,
+  logOrderToSell,
+} from "../../utils/logger";
 import { createOrdersFileName, logErrorFile } from "../../utils/files";
 import {
   checkBalance,
@@ -29,6 +37,7 @@ import {
   bollingerOrderBuy,
   bollingerOrderSell,
 } from "../binance/orderIndicator/bollinger";
+import { getRsiValues } from "../binance/orderIndicator/rsi";
 
 let Storage = require("node-storage");
 const store = new Storage(`./analytics/data/${MARKET}-bollinger.json`);
@@ -39,19 +48,22 @@ const broadcast = async () => {
     try {
       const marketPrice = await getPrice();
       const startPrice = parseFloat(store.get("start_price"));
+      const orders = store.get("orders");
 
       const candleValues = await getCandles({
         symbol: MARKET,
-        interval: "1m",
-        limit: 20,
+        interval: "5m",
+        limit: 100,
         candleType: "close",
       });
+
+      const rsiValues = APPLY_RSI ? getRsiValues({ candleValues }) : null;
+      const rsi = rsiValues ? rsiValues[rsiValues.length - 1] : undefined;
 
       if (marketPrice) {
         console.clear();
 
         logLogo();
-
         log("=====================================================");
 
         logColor(colors.green, "Bot: Bollinger");
@@ -65,12 +77,17 @@ const broadcast = async () => {
           price: marketPrice,
         });
 
+        if (rsi) {
+          logColor(colors.green, `RSI: ${rsi}`);
+        }
+
         const takeProfitActivated =
           (TAKE_PROFIT_BOT &&
-            (await verifyTakeProfit({ store, marketPrice }))) ||
+            (await verifyTakeProfit({ store, marketPrice, ordersFileName }))) ||
           false;
         const stopLossActivated =
-          (STOP_LOSS_BOT && (await verifyStopLoss({ store, marketPrice }))) ||
+          (STOP_LOSS_BOT &&
+            (await verifyStopLoss({ store, marketPrice, ordersFileName }))) ||
           false;
 
         if (takeProfitActivated || stopLossActivated) break;
@@ -88,17 +105,26 @@ const broadcast = async () => {
           const soldPrice =
             currentLower + currentLower * (BOLLINGER_BANDS_PERCENT_SELL / 100);
 
+          // console.log(
+          //   `Target Price: ${targetPrice} - Sold Price: ${soldPrice}`
+          // );
+
           //Log bolinger all values
           log("=====================================================");
-          log("Bollinger Bands values");
-          logColor(colors.green, `Current upper: ${currentUpper} ${MARKET2}`);
-
-          logColor(
-            colors.orange,
-            `Current middle: ${currentMiddle} ${MARKET2}`
+          log(
+            `Upper: ${currentUpper.toFixed(
+              10
+            )} - Middle: ${currentMiddle.toFixed(
+              10
+            )} - Lower: ${currentLower.toFixed(10)}`
           );
-          logColor(colors.green, `Current lower: ${currentLower} ${MARKET2}`);
           log("=====================================================");
+
+          if (orders.length > 0) {
+            logOrderToSell({ marketPrice, store });
+            log("=====================================================");
+          }
+
           if (marketPrice < currentLower) {
             let factor = startPrice - marketPrice;
             let percentage = (factor / startPrice) * 100;
@@ -118,29 +144,30 @@ const broadcast = async () => {
                 marketPrice,
                 store,
                 ordersFileName,
+                rsi,
               });
             }
+          } else if (marketPrice >= currentLower) {
+            let factor = marketPrice - startPrice;
+            let percentage = (factor / startPrice) * 100;
+
+            logColor(
+              colors.orange,
+              `Price: ${marketPrice.toFixed(8)} ${MARKET2}`
+            );
+
+            store.put("percentage", `${parseFloat(percentage.toFixed(3))}`);
+
+            await bollingerOrderSell({
+              marketPrice,
+              store,
+              ordersFileName,
+            });
           }
-
-          let factor = marketPrice - startPrice;
-          let percentage = (factor / startPrice) * 100;
-
-          logColor(
-            colors.orange,
-            `Price: ${marketPrice.toFixed(8)} ${MARKET2}`
-          );
-
-          store.put("percentage", `${parseFloat(percentage.toFixed(3))}`);
-
-          await bollingerOrderSell({
-            marketPrice,
-            store,
-            ordersFileName,
-          });
         }
       }
     } catch (error: any) {
-      console.log(error);
+      console.log("broadcast - error", error);
       logErrorFile(error);
     }
 

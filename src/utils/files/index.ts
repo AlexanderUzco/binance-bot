@@ -56,10 +56,16 @@ const addOrderToExcel = async ({ fileName, order }: AddOrderToExcelT) => {
 };
 
 const createOrdersFileName = ({ botRun }: CreateOrdersFileNameT): string => {
-  const ordersFolder = `./analytics/orders/${botRun}`;
+  const ordersFolder = `./analytics/orders`;
 
   if (!fs.existsSync(ordersFolder)) {
     fs.mkdirSync(ordersFolder);
+  }
+
+  const currentOrderFolder = ordersFolder + "/" + botRun;
+
+  if (!fs.existsSync(currentOrderFolder)) {
+    fs.mkdirSync(currentOrderFolder);
   }
 
   const ordersFileName = `${ordersFolder}/orders_${botRun}_${MARKET}_${Date.now()}.xlsx`;

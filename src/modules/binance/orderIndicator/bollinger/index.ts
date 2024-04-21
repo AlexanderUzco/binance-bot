@@ -1,13 +1,14 @@
 import {
-  BOLLINGER_BANDS_PERCENT_BUY,
+  APPLY_RSI,
   BUY_ORDER_AMOUNT,
   MARKET,
   MARKET1,
   MARKET2,
+  RSI_RESISTANCE,
+  RSI_SUPPORT,
 } from "../../../../environments";
 import {
   calculateProfit,
-  getCandles,
   getQuantity,
   getRealProfits,
   newPriceReset,
@@ -25,6 +26,7 @@ import { OrderExcelFile, OrderJsonData } from "../../../../types/orders";
 import { addOrderToExcel } from "../../../../utils/files";
 import { getToSold, marketSell } from "../../orderType/market/sellOrder";
 import { sendOrderMarketSold } from "../../../telegram/messages/orderMarketMessages";
+import { getRsiValues } from "../rsi";
 
 const applyBollingerStrategy = async ({
   candleValues,
@@ -53,7 +55,10 @@ const bollingerOrderBuy = async ({
   marketPrice,
   store,
   ordersFileName,
+  rsi,
 }: BollingerOrderBuyT) => {
+  if (rsi && rsi > RSI_SUPPORT) return;
+
   if (
     parseFloat(store.get(`${MARKET2?.toLocaleLowerCase()}_balance`)) >
     BUY_ORDER_AMOUNT * marketPrice
@@ -141,7 +146,10 @@ const bollingerOrderSell = async ({
   marketPrice,
   store,
   ordersFileName,
+  rsi,
 }: BollingerOrderSellT) => {
+  if (rsi && rsi < RSI_RESISTANCE) return;
+
   const orders = store.get("orders");
   const toSold = getToSold({ store, price: marketPrice, changeStatus: true });
 

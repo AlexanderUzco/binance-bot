@@ -24,3 +24,7 @@ export type MarketOrderSellT = {
   store: any;
   ordersFileName: string;
 };
+
+export type SellAllT = {
+  ordersFileName: string;
+};

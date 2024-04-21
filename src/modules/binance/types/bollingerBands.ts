@@ -7,10 +7,12 @@ export type BollingerOrderBuyT = {
   priceToSell: number;
   store: any;
   ordersFileName: string;
+  rsi?: number;
 };
 
 export type BollingerOrderSellT = {
   marketPrice: number;
   store: any;
   ordersFileName: string;
+  rsi?: number;
 };

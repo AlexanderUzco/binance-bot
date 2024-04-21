@@ -38,3 +38,15 @@ export type GetCandlesT = {
   limit?: number;
   candleType: "close" | "open" | "high" | "low";
 };
+
+export type VerifyTakeProfitT = {
+  store: any;
+  marketPrice: number;
+  ordersFileName: string;
+};
+
+export type VerifyStopLossT = {
+  store: any;
+  marketPrice: number;
+  ordersFileName: string;
+};

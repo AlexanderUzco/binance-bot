@@ -29,6 +29,11 @@ const BOLLINGER_BANDS_PERCENT_BUY = process.env
 const BOLLINGER_BANDS_PERCENT_SELL = process.env
   .BOLLINGER_BANDS_PERCENT_SELL as unknown as number;
 
+// ##### Bot RSI Configs #####
+const APPLY_RSI = process.env.APPLY_RSI || false;
+const RSI_SUPPORT = (process.env.RSI_SUPPORT as unknown as number) || 30;
+const RSI_RESISTANCE = (process.env.RSI_RESISTANCE as unknown as number) || 70;
+
 // Telegram Configs
 const TELEGRAM_BOT_TOKEN: string | undefined = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID: string | undefined = process.env.TELEGRAM_CHAT_ID;
@@ -50,4 +55,7 @@ export {
   SELL_ALL_ON_CLOSE,
   BOLLINGER_BANDS_PERCENT_BUY,
   BOLLINGER_BANDS_PERCENT_SELL,
+  APPLY_RSI,
+  RSI_SUPPORT,
+  RSI_RESISTANCE,
 };
