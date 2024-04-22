@@ -52,8 +52,8 @@ const broadcast = async () => {
 
       const candleValues = await getCandles({
         symbol: MARKET,
-        interval: "5m",
-        limit: 100,
+        interval: "1m",
+        limit: 150,
         candleType: "close",
       });
 
@@ -162,6 +162,7 @@ const broadcast = async () => {
               marketPrice,
               store,
               ordersFileName,
+              rsi,
             });
           }
         }

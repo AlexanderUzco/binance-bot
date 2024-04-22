@@ -68,7 +68,7 @@ const createOrdersFileName = ({ botRun }: CreateOrdersFileNameT): string => {
     fs.mkdirSync(currentOrderFolder);
   }
 
-  const ordersFileName = `${ordersFolder}/orders_${botRun}_${MARKET}_${Date.now()}.xlsx`;
+  const ordersFileName = `${currentOrderFolder}/orders_${botRun}_${MARKET}_${Date.now()}.xlsx`;
 
   return ordersFileName;
 };
