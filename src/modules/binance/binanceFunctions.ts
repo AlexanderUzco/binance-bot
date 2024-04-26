@@ -321,9 +321,22 @@ const getCandles = async (params: GetCandlesT) => {
       limit,
     });
 
-    const closings = response.map((candle) => parseFloat(candle[candleType]));
+    const closings = response.map((candle, index) =>
+      parseFloat(candle[candleType])
+    );
 
-    return closings;
+    const currentCandle = {
+      close: parseFloat(response[response.length - 1].close),
+      high: parseFloat(response[response.length - 1].high),
+      low: parseFloat(response[response.length - 1].low),
+    };
+    const lastCandle = {
+      close: parseFloat(response[response.length - 2].close),
+      high: parseFloat(response[response.length - 2].high),
+      low: parseFloat(response[response.length - 2].low),
+    };
+
+    return { closings, currentCandle, lastCandle };
   } catch (error) {
     console.error(
       "Error al obtener los precios de cierre de las velas:",

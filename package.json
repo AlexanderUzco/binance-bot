@@ -13,8 +13,12 @@
     "build": "tsc --outDir dist",
     "start-base": "node dist/app.js base resumen",
     "start-bollinger": "node dist/app.js bollinger resumen",
+    "start-bollinger-ma": "node dist/app.js bollinger-ma resumen",
+    "start-rsi": "node dist/app.js rsi resumen",
     "bot:run-base": "npm run build && npm run start-base",
     "bot:run-bollinger": "npm run build && npm run start-bollinger",
+    "bot:run-bollinger-ma": "npm run build && npm run start-bollinger-ma",
+    "bot:run-rsi": "npm run build && npm run start-rsi",
     "bot:test:test-sell": "npm run build && node dist/modules/runs/runTestSell.js"
   },
   "author": "",

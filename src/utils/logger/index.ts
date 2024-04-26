@@ -84,7 +84,7 @@ const logOrderToSell = ({ store, marketPrice }: any) => {
   orders.slice(0, 3).forEach((order: any) => {
     logColor(
       colors.green,
-      `Sell ${order.amount} ${MARKET1} for ${(
+      `Sell ${order.id} ${order.amount} ${MARKET1} for ${(
         order.amount * marketPrice
       ).toFixed(2)} ${MARKET2}, Price: ${order.sell_price}`
     );

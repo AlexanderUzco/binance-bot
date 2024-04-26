@@ -17,6 +17,7 @@ export type GetToSoldT = {
   store: any;
   price: number;
   changeStatus: boolean;
+  rsi?: number;
 };
 
 export type MarketOrderSellT = {

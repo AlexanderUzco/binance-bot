@@ -11,6 +11,7 @@ import {
   TAKE_PROFIT_BOT,
   BOLLINGER_BANDS_PERCENT_SELL,
   BOLLINGER_BANDS_PERCENT_BUY,
+  APPLY_RSI,
 } from "../../environments";
 import {
   colors,
@@ -35,6 +36,7 @@ import {
   bollingerOrderBuy,
   bollingerOrderSell,
 } from "../binance/orderIndicator/bollinger";
+import { getRsiValues } from "../binance/orderIndicator/rsi";
 
 let Storage = require("node-storage");
 const store = new Storage(`./analytics/data/${MARKET}-bollinger.json`);
@@ -54,6 +56,11 @@ const broadcast = async () => {
         candleType: "close",
       });
 
+      const rsiValues = APPLY_RSI
+        ? getRsiValues({ candleValues: candleValues.closings })
+        : null;
+      const rsi = rsiValues ? rsiValues[rsiValues.length - 1] : undefined;
+
       if (marketPrice) {
         console.clear();
 
@@ -70,6 +77,10 @@ const broadcast = async () => {
           store,
           price: marketPrice,
         });
+
+        if (rsi) {
+          logColor(colors.green, `RSI: ${rsi}`);
+        }
 
         const takeProfitActivated =
           (TAKE_PROFIT_BOT &&
@@ -126,6 +137,7 @@ const broadcast = async () => {
               marketPrice,
               store,
               ordersFileName,
+              rsi,
             });
           }
 
@@ -134,6 +146,7 @@ const broadcast = async () => {
               marketPrice,
               store,
               ordersFileName,
+              rsi,
             });
           }
         }
@@ -147,7 +160,7 @@ const broadcast = async () => {
   }
 };
 
-const initBollinger = async () => {
+const initRsi = async () => {
   if (process.argv[3] === "resumen") {
     if (SELL_ALL_ON_START) await clearStart();
 
@@ -190,4 +203,4 @@ const initBollinger = async () => {
   broadcast();
 };
 
-export default initBollinger;
+export default initRsi;

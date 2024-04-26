@@ -1,5 +1,3 @@
-// Crear a Order Type
-
 export interface OrderJsonData {
   id: number;
   buy_price: number;
@@ -21,3 +19,9 @@ export interface OrderExcelFile {
   price: number;
   profit?: number;
 }
+
+export type BollingOrderJsonData = OrderJsonData & {
+  sl_price: number;
+  ma_check: number | null;
+  allData?: any;
+};

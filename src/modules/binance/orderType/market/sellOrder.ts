@@ -14,6 +14,7 @@ import {
   MARKET2,
   MARKET,
   BUY_ORDER_AMOUNT,
+  RSI_RESISTANCE,
 } from "../../../../environments";
 import {
   GetToSoldT,
@@ -31,13 +32,13 @@ const marketSell = async ({ amount }: MarketSellT) => {
   return await marketOrder({ side: "SELL", amount });
 };
 
-const getToSold = ({ store, price, changeStatus }: GetToSoldT) => {
+const getToSold = ({ store, price, changeStatus, rsi }: GetToSoldT) => {
   const orders = store.get("orders");
   const toSold = [];
 
   for (var i = 0; i < orders.length; i++) {
     var order = orders[i];
-    if (price >= order.sell_price) {
+    if ((rsi && rsi >= RSI_RESISTANCE) || price >= order.sell_price) {
       if (changeStatus) {
         order.sold_price = price;
         order.status = "selling";

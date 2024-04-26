@@ -29,6 +29,13 @@ const BOLLINGER_BANDS_PERCENT_BUY = process.env
 const BOLLINGER_BANDS_PERCENT_SELL = process.env
   .BOLLINGER_BANDS_PERCENT_SELL as unknown as number;
 
+const BOLLINGER_BANDS_STOP_LOSS_ORDER =
+  (process.env.BOLLINGER_BANDS_STOP_LOSS_ORDER as unknown as number) || 0;
+
+// # Using Bollienger Bands with MA
+const BOLLIINGER_MA_STOP_LOSS =
+  (process.env.BOLLIINGER_MA_STOP_LOSS as unknown as number) || 0;
+
 // ##### Bot RSI Configs #####
 const APPLY_RSI = process.env.APPLY_RSI || false;
 const RSI_SUPPORT = (process.env.RSI_SUPPORT as unknown as number) || 30;
@@ -55,6 +62,8 @@ export {
   SELL_ALL_ON_CLOSE,
   BOLLINGER_BANDS_PERCENT_BUY,
   BOLLINGER_BANDS_PERCENT_SELL,
+  BOLLIINGER_MA_STOP_LOSS,
+  BOLLINGER_BANDS_STOP_LOSS_ORDER,
   APPLY_RSI,
   RSI_SUPPORT,
   RSI_RESISTANCE,
