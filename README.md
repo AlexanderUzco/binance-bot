@@ -63,3 +63,37 @@ Aplicar estrategia de RSI
 **TELEGRAM_BOT_TOKEN:** Token del bot para poder enviar mensajes
 
 **TELEGRAM_CHAT_ID:** ID del chat de telegram
+
+## Instalacion de los paquetes
+
+Solo corriendo el siguiente comando podras usarlo:
+
+```bash
+npm i
+```
+
+## Comandos para trabajar con el bot
+
+### Bot: Base
+
+```bash
+npm run bot:run-base
+```
+
+### Bot: Bollinger Bands
+
+```bash
+npm run bot:run-bollinger
+```
+
+### Bot: Bollinger Bands (MA - Moving Average)
+
+```bash
+npm run bot:run-bollinger-ma
+```
+
+### Bot: RSI (Relative Strength Index)
+
+```bash
+npm run bot:run-rsi
+```
