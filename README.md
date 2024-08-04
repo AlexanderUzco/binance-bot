@@ -16,45 +16,45 @@ Configuracion de las Keys de Binance para poder Operar con el bot
 
 ### Configuracion de par
 
-**MARKET1:** Primer elemento del par de Cripto.
-**MARKET2:** Segundo elemento del par de Cripto.
+1. **MARKET1:** Primer elemento del par de Cripto.
+2. **MARKET2:** Segundo elemento del par de Cripto.
 
 ### Base Envs
 
 Estrategia Base: Compra y vende en base a una diferencia del precio
 
-**PRICE_PERCENT:** Porcentaje de Compra/venta.
-**MIN_PRICE_TRANSACTION:** Precio minimo para realizar una transaccion, la cantidad de tokens debe ser igual al precio minimo de transaccion que acepta Binance dependiendo del par.
-**BUY_ORDER_AMOUNT:** Cantidad de Tokens a comprar.
+1. **PRICE_PERCENT:** Porcentaje de Compra/venta.
+2. **MIN_PRICE_TRANSACTION:** Precio minimo para realizar una transaccion, la cantidad de tokens debe ser igual al precio minimo de transaccion que acepta Binance dependiendo del par.
+3. **BUY_ORDER_AMOUNT:** Cantidad de Tokens a comprar.
 
 ### Bollinger Bands Envs
 
 Estrategia con bandas de bollinger
 
-**BOLLINGER_BANDS_PERCENT_BUY:** Porcentaje del precio de comprar de las bandas de Bollinger tomando como referencia la banda inferior.
-**BOLLINGER_BANDS_PERCENT_SELL:** Porcentaje del precio de venta de las bandas de Bollinger tomando como referencia el precio comprado de la banda inferior.
+1. **BOLLINGER_BANDS_PERCENT_BUY:** Porcentaje del precio de comprar de las bandas de Bollinger tomando como referencia la banda inferior.
+2. **BOLLINGER_BANDS_PERCENT_SELL:** Porcentaje del precio de venta de las bandas de Bollinger tomando como referencia el precio comprado de la banda inferior.
 
 ### RSI Envs
 
 Aplicar estrategia de RSI
 
-**APPLY_RSI:** Boolean para aplicar RSI.
-**RSI_SUPPORT:** Suporte del RSI.
-**RSI_RESISTANCE:** Resistencia del RSI.
+1. **APPLY_RSI:** Boolean para aplicar RSI.
+2. **RSI_SUPPORT:** Suporte del RSI.
+3. **RSI_RESISTANCE:** Resistencia del RSI.
 
 ### Common Envs
 
-**STOP_LOSS_BOT:** Stop Loss del bot, al llegar al limite este se detendra.
-**TAKE_PROFIT_BOT:** Take Profit del bot, al llegar al limite este se detendra.
-**SELL_ALL_ON_START:** Vende los tokens existentes al momento de iniciar el bot para comenzar con un historial limpio.
-**SELL_ALL_ON_CLOSE:** Al momento de deternse el bot ya sea por el take profit o el stop loss vendera los tokens existente.
+1. **STOP_LOSS_BOT:** Stop Loss del bot, al llegar al limite este se detendra.
+2. **TAKE_PROFIT_BOT:** Take Profit del bot, al llegar al limite este se detendra.
+3. **SELL_ALL_ON_START:** Vende los tokens existentes al momento de iniciar el bot para comenzar con un historial limpio.
+4. **SELL_ALL_ON_CLOSE:** Al momento de deternse el bot ya sea por el take profit o el stop loss vendera los tokens existente.
 
 ## Telegram API
 
 ### Para configurar el bot de Telegran puedes seguir la siguiente [guia](https://sendpulse.com/latam/knowledge-base/chatbot/telegram/create-telegram-chatbot):
 
-**TELEGRAM_BOT_TOKEN:** Token del bot para poder enviar mensajes.
-**TELEGRAM_CHAT_ID:** ID del chat de telegram.
+1. **TELEGRAM_BOT_TOKEN:** Token del bot para poder enviar mensajes.
+2. **TELEGRAM_CHAT_ID:** ID del chat de telegram.
 
 ## Instalacion de los paquetes
 
