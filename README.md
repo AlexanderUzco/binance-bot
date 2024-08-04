@@ -58,7 +58,9 @@ Aplicar estrategia de RSI
 
 **SELL_ALL_ON_CLOSE:** Al momento de deternse el bot ya sea por el take profit o el stop loss vendera los tokens existente
 
-### Telegram API
+## Telegram API
+
+### Para configurar el bot de Telegran puedes seguir la siguiente [guia](https://sendpulse.com/latam/knowledge-base/chatbot/telegram/create-telegram-chatbot):
 
 **TELEGRAM_BOT_TOKEN:** Token del bot para poder enviar mensajes
 
