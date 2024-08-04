@@ -2,7 +2,8 @@
 
 Binance bot con Typescript y API Telegram!
 
-> [!WARNING] > **Aviso Importante:** Este bot de Binance ha sido desarrollado para propósitos educativos y experimentales. El uso de este bot implica riesgos inherentes debido a la naturaleza volátil del mercado de criptomonedas. El desarrollador no se hace responsable por pérdidas financieras, daños, o cualquier otra consecuencia adversa derivada del uso de este bot. Al utilizar este software, aceptas y entiendes que operas bajo tu propio riesgo y responsabilidad. Asegúrate de comprender completamente el funcionamiento del bot y de las estrategias de trading antes de utilizarlo con fondos reales.
+> [!WARNING]
+> Este bot de Binance ha sido desarrollado para propósitos educativos y experimentales. El uso de este bot implica riesgos inherentes debido a la naturaleza volátil del mercado de criptomonedas. El desarrollador no se hace responsable por pérdidas financieras, daños, o cualquier otra consecuencia adversa derivada del uso de este bot. Al utilizar este software, aceptas y entiendes que operas bajo tu propio riesgo y responsabilidad. Asegúrate de comprender completamente el funcionamiento del bot y de las estrategias de trading antes de utilizarlo con fondos reales.
 
 ## Variables de entorno:
 
