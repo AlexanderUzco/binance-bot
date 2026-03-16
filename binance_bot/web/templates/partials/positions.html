@@ -1,0 +1,33 @@
+{% if positions %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Entry</th>
+            <th>Qty</th>
+            <th>TP</th>
+            <th>SL</th>
+            <th>Unrealized</th>
+            <th>Strategy</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for p in positions %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ "%.6f"|format(p.entry_price) }}</td>
+            <td>{{ "%.4f"|format(p.quantity) }}</td>
+            <td>{{ "%.6f"|format(p.sell_target) if p.sell_target else "—" }}</td>
+            <td>{{ "%.6f"|format(p.stop_loss) if p.stop_loss else "—" }}</td>
+            <td class="{{ 'pnl-positive' if p.unrealized_pnl >= 0 else 'pnl-negative' }}">
+                {{ "+" if p.unrealized_pnl >= 0 else "" }}{{ "%.4f"|format(p.unrealized_pnl) }}
+                ({{ "%.2f"|format(p.unrealized_pct) }}%)
+            </td>
+            <td>{{ p.strategy }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">No open positions</p>
+{% endif %}

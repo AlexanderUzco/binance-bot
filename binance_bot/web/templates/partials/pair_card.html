@@ -1,0 +1,53 @@
+<div class="pair-card" id="card-{{ pair.symbol }}">
+    <div class="card-header">
+        <a href="/pair/{{ pair.symbol }}" class="card-symbol">{{ pair.symbol }}</a>
+        <span class="badge badge-{{ pair.status }}">{{ pair.status }}</span>
+    </div>
+    <div class="card-body">
+        <div class="card-price">
+            {% if pair.current_price > 0 %}
+                ${{ "%.6f"|format(pair.current_price) }}
+            {% else %}
+                —
+            {% endif %}
+        </div>
+        <div class="card-stats">
+            <div class="card-stat">
+                <span class="stat-label">Realized</span>
+                <span class="stat-value {{ 'pnl-positive' if pair.realized_pnl >= 0 else 'pnl-negative' }}">
+                    {{ "+" if pair.realized_pnl >= 0 else "" }}{{ "%.4f"|format(pair.realized_pnl) }}
+                </span>
+            </div>
+            <div class="card-stat">
+                <span class="stat-label">Unrealized</span>
+                <span class="stat-value {{ 'pnl-positive' if pair.unrealized_pnl >= 0 else 'pnl-negative' }}">
+                    {{ "+" if pair.unrealized_pnl >= 0 else "" }}{{ "%.4f"|format(pair.unrealized_pnl) }}
+                </span>
+            </div>
+            <div class="card-stat">
+                <span class="stat-label">Positions</span>
+                <span class="stat-value">{{ pair.open_positions }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <span class="card-strategy">{{ pair.strategy }}</span>
+        <div class="card-actions">
+            {% if pair.status == "running" %}
+            <a href="/pair/{{ pair.symbol }}" class="btn btn-sm btn-detail">Details</a>
+            <button class="btn btn-sm btn-danger"
+                    hx-post="/pair/{{ pair.symbol }}/stop"
+                    hx-target="#card-{{ pair.symbol }}"
+                    hx-swap="outerHTML">Stop</button>
+            {% else %}
+            <button class="btn btn-sm btn-success"
+                    hx-post="/pair/{{ pair.symbol }}/start"
+                    hx-target="#card-{{ pair.symbol }}"
+                    hx-swap="outerHTML">Start</button>
+            {% endif %}
+        </div>
+        {% if pair.error %}
+        <span class="card-error" title="{{ pair.error }}">{{ pair.error[:30] }}</span>
+        {% endif %}
+    </div>
+</div>

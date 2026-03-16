@@ -1,0 +1,25 @@
+{
+  "pairs": [
+    {
+      "market1": "DOGE",
+      "market2": "USDT",
+      "strategy": "composite",
+      "buy_order_amount": 10.0,
+      "enabled": true
+    },
+    {
+      "market1": "PEPE",
+      "market2": "USDT",
+      "strategy": "composite",
+      "buy_order_amount": 10.0,
+      "enabled": true
+    },
+    {
+      "market1": "BTC",
+      "market2": "USDT",
+      "strategy": "composite",
+      "buy_order_amount": 0.001,
+      "enabled": false
+    }
+  ]
+}

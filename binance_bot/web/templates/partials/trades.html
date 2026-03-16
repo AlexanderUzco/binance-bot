@@ -1,0 +1,34 @@
+{% if trades %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Side</th>
+            <th>Entry</th>
+            <th>Exit</th>
+            <th>Qty</th>
+            <th>P&L</th>
+            <th>%</th>
+            <th>Strategy</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for t in trades %}
+        <tr>
+            <td class="{{ 'side-buy' if t.side == 'BUY' else 'side-sell' }}">{{ t.side }}</td>
+            <td>{{ "%.6f"|format(t.entry_price) }}</td>
+            <td>{{ "%.6f"|format(t.exit_price) }}</td>
+            <td>{{ "%.4f"|format(t.quantity) }}</td>
+            <td class="{{ 'pnl-positive' if t.profit >= 0 else 'pnl-negative' }}">
+                {{ "+" if t.profit >= 0 else "" }}{{ "%.4f"|format(t.profit) }}
+            </td>
+            <td class="{{ 'pnl-positive' if t.profit_pct >= 0 else 'pnl-negative' }}">
+                {{ "%.2f"|format(t.profit_pct) }}%
+            </td>
+            <td>{{ t.strategy }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">No trades yet</p>
+{% endif %}

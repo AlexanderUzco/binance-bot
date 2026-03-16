@@ -1,0 +1,16 @@
+<div class="summary-grid">
+    <div class="summary-card">
+        <span class="summary-label">Balance</span>
+        <span class="summary-value">{{ "%.2f"|format(balance) }} {{ quote_asset }}</span>
+    </div>
+    <div class="summary-card">
+        <span class="summary-label">Total P&L</span>
+        <span class="summary-value {{ 'pnl-positive' if total_pnl >= 0 else 'pnl-negative' }}">
+            {{ "+" if total_pnl >= 0 else "" }}{{ "%.4f"|format(total_pnl) }} {{ quote_asset }}
+        </span>
+    </div>
+    <div class="summary-card">
+        <span class="summary-label">Active Pairs</span>
+        <span class="summary-value">{{ active_count }} / {{ total_count }}</span>
+    </div>
+</div>

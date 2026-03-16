@@ -133,3 +133,16 @@ dist
 data/
 orders/
 analytics/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+build/
+eggs/
+.eggs/
+*.so
+venv/
+.venv/

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}BinBot — {{ pair.symbol }}{% endblock %}
+
+{% block head %}
+<script src="https://unpkg.com/lightweight-charts@4/dist/lightweight-charts.standalone.production.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="pair-detail-header">
+    <a href="/" class="back-link">&larr; Dashboard</a>
+    <h1>
+        {{ pair.symbol }}
+        <span class="badge badge-{{ pair.status }}">{{ pair.status }}</span>
+    </h1>
+    <div class="pair-meta">
+        <span>Strategy: <strong>{{ pair.strategy }}</strong></span>
+        {% if pair.current_price > 0 %}
+        <span>Price: <strong>${{ "%.6f"|format(pair.current_price) }}</strong></span>
+        {% endif %}
+        <span>Trades: <strong>{{ stats.total_trades }}</strong></span>
+        <span>Win rate: <strong>{{ "%.1f"|format(stats.win_rate) }}%</strong></span>
+    </div>
+    <div class="pair-actions">
+        {% if pair.status == "running" %}
+        <button class="btn btn-danger"
+                hx-post="/pair/{{ pair.symbol }}/stop"
+                hx-swap="none"
+                onclick="setTimeout(() => location.reload(), 500)">Stop</button>
+        {% else %}
+        <button class="btn btn-success"
+                hx-post="/pair/{{ pair.symbol }}/start"
+                hx-swap="none"
+                onclick="setTimeout(() => location.reload(), 500)">Start</button>
+        {% endif %}
+    </div>
+</div>
+
+<section class="chart-section">
+    <div class="chart-header">
+        <h2>Chart</h2>
+        <div class="chart-toggles">
+            <label><input type="checkbox" id="toggle-bb" checked> BB</label>
+            <label><input type="checkbox" id="toggle-supertrend" checked> Supertrend</label>
+            <label><input type="checkbox" id="toggle-ema" checked> EMA</label>
+        </div>
+    </div>
+    <div class="chart-container">
+        <div id="price-chart" data-symbol="{{ pair.symbol }}"></div>
+    </div>
+    <div class="chart-container">
+        <div class="chart-sub-label">RSI (14)</div>
+        <div id="rsi-chart"></div>
+    </div>
+    <div class="chart-container">
+        <div class="chart-sub-label">ADX (14)</div>
+        <div id="adx-chart"></div>
+    </div>
+</section>
+
+<div class="pair-detail-grid">
+    <section class="detail-section">
+        <h2>Live Operation</h2>
+        <div id="live-operation"
+             hx-get="/partials/pair/{{ pair.symbol }}/live"
+             hx-trigger="every 2s"
+             hx-swap="morph:innerHTML">
+            {% include "partials/live_operation.html" %}
+        </div>
+    </section>
+
+    <section class="detail-section">
+        <h2>Open Positions</h2>
+        <div id="positions-table"
+             hx-get="/partials/pair/{{ pair.symbol }}/positions"
+             hx-trigger="every 3s"
+             hx-swap="morph:innerHTML">
+            {% include "partials/positions.html" %}
+        </div>
+    </section>
+
+    <section class="detail-section">
+        <h2>Recent Trades</h2>
+        <div id="trades-table"
+             hx-get="/partials/pair/{{ pair.symbol }}/trades"
+             hx-trigger="every 5s"
+             hx-swap="morph:innerHTML">
+            {% include "partials/trades.html" %}
+        </div>
+    </section>
+</div>
+<script src="/static/chart.js"></script>
+{% endblock %}

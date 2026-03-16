@@ -1,0 +1,45 @@
+{% if live.running %}
+<div class="live-header">
+    <div class="live-metrics">
+        <div class="live-metric">
+            <span class="stat-label">Price</span>
+            <span class="stat-value">${{ "%.6f"|format(live.price) }}</span>
+        </div>
+        <div class="live-metric">
+            <span class="stat-label">Balance</span>
+            <span class="stat-value">{{ "%.2f"|format(live.balance) }}</span>
+        </div>
+        <div class="live-metric">
+            <span class="stat-label">Regime</span>
+            <span class="stat-value regime-badge">{{ live.regime }}</span>
+        </div>
+        <div class="live-metric">
+            <span class="stat-label">Strategy</span>
+            <span class="stat-value">{{ live.strategy }}</span>
+        </div>
+        <div class="live-metric">
+            <span class="stat-label">Uptime</span>
+            <span class="stat-value">{{ live.uptime_fmt }}</span>
+        </div>
+        <div class="live-metric">
+            <span class="stat-label">Ticks</span>
+            <span class="stat-value">{{ live.tick_count }}</span>
+        </div>
+    </div>
+</div>
+<div class="event-feed">
+    {% if live.events %}
+    {% for ev in live.events|reverse %}
+    <div class="event-row event-{{ ev.type }}">
+        <span class="event-time">{{ ev.time }}</span>
+        <span class="event-type-badge">{{ ev.type|upper }}</span>
+        <span class="event-msg">{{ ev.message }}</span>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="empty-state">Waiting for activity...</p>
+    {% endif %}
+</div>
+{% else %}
+<p class="empty-state">Engine not running — start the pair to see live data</p>
+{% endif %}

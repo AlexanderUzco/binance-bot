@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}BinBot — Dashboard{% endblock %}
+
+{% block content %}
+<section id="account-summary"
+         hx-get="/partials/account-summary"
+         hx-trigger="every 5s"
+         hx-swap="morph:innerHTML">
+    {% include "partials/account_summary.html" %}
+</section>
+
+<section id="pair-cards"
+         hx-get="/partials/pair-cards"
+         hx-trigger="every 3s"
+         hx-swap="morph:innerHTML">
+    {% include "partials/pair_cards.html" %}
+</section>
+{% endblock %}
